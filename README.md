@@ -1,1 +1,0 @@
-# How-to-build-Elasticsearch-API-using-GraphQL
