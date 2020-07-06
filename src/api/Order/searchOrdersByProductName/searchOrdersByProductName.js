@@ -46,11 +46,13 @@ export default {
           }
         })
 
-        console.log(searchResult);
-
         searchOrderResult.total = searchResult.body.hits.total.value;
-        searchOrderResult.aggDayOfWeekOrders = {};
-        searchOrderResult.orders = null;
+        searchOrderResult.day_of_week_orders = searchResult.body.aggregations.day_of_week_orders;
+        searchOrderResult.orders = new Array();
+
+        for (let hit of searchResult.body.hits.hits) {
+          searchOrderResult.orders.push(hit._source);
+        }
       } catch (e) {
         console.log("searchOrders exception: " + e);
       }
