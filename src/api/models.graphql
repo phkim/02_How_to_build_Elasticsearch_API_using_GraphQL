@@ -1,62 +1,25 @@
-type OrderProduct {
-	_id: String
-	product_id: Int
-	product_name: String
-	manufacturer: String
-	category: String
-	sku: String
-	base_price: Float
-	base_unit_price: Float
-	min_price: Float
+type Product {
+	id: Int
+	productName: String
 	price: Float
-	quantity: Int
-	discount_amount: Float
-	discount_percentage: Float
-	unit_discount_amount: Float
-	tax_amount: Float
-	taxless_price: Float
-	taxful_price: Float
-	created_on: String
+	taxfulPrice: Float
 }
 
-type GeoPoint {
-	lon: Float
-	lat: Float
-}
-
-type GeoIP {
-	continent_name: String
-	country_iso_code: String
-	city_name: String
-	region_name: String
-	location: GeoPoint
+type Customer {
+	id: Int
+	userId: String
+	customerFullName: String
+	customerGender: String
 }
 
 type Order {
-	order_id: Int
-	type: String
-	order_date: String
-	day_of_week: String
-	day_of_week_i: Int
-	geoip: GeoIP
-	total_unique_products: Int
-	total_quantity: Int
-	taxless_total_price: Float
-	taxful_total_price: Float
+	id: Int
+	customerId: Int
+	productId: Int
 	currency: String
-	category: [String]
-	manufacturer: [String]
-	products: [OrderProduct]
-	sku: [String]
-	user: String
-	customer_id: Int
-	customer_last_name: String
-	customer_first_name: String
-	customer_full_name: String
-	customer_gender: String
-	customer_phone: String
-	customer_birth_date: String
-	email: String
+	taxfulTotalPrice: Float
+	dayOfWeek: String
+	orderDate: String
 }
 
 type OrderCountByDayOfWeek {
@@ -71,6 +34,5 @@ type OrderCountByDayOfWeek {
 
 type SearchOrderResult {
 	total: Int
-	orderCountByDayOfWeek: OrderCountByDayOfWeek
 	orders: [Order]
 }

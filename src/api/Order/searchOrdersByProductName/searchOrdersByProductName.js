@@ -4,7 +4,7 @@ export default {
   Query: {
     searchOrdersByProductName: async (_, args) => {
       let client = null;
-      let { searchKeyword, pageSize, pageIndex } = args;
+      let { searchKeyword } = args;
       let searchResult = null;
       let searchOrderResult = {};
 
@@ -20,35 +20,18 @@ export default {
         });
 
         searchResult = await client.search({
-          index: "kibana_sample_data_ecommerce",
+          index: "product",
           body: {
-            "from": (pageIndex * pageSize),
-            "size": pageSize,
-            "aggs": {
-              "day_of_week_orders": {
-                "terms": {
-                  "field": "day_of_week",
-                  "size": 7,
-                  "order": {
-                    "_count": "desc"
-                  }
-                }
-              }
-            },
+            "size": 10000,
             "query": {
               "match": {
-                "products.product_name": searchKeyword
+                "productName": searchKeyword
               }
-            },
-            "sort": [
-              { "order_id": { "order": "desc", "mode": "max" } }
-            ]
+            }
           }
         })
 
-        searchOrderResult.total = searchResult.body.hits.total.value;
-        searchOrderResult.day_of_week_orders = searchResult.body.aggregations.day_of_week_orders;
-        searchOrderResult.orders = new Array();
+        searchOrderResult.products = new Array();
 
         for (let hit of searchResult.body.hits.hits) {
           searchOrderResult.orders.push(hit._source);
