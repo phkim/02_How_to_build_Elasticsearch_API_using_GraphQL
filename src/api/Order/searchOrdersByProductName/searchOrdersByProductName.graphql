@@ -1,3 +1,7 @@
 type Query {
-	searchOrdersByProductName(searchKeyword: String): SearchOrderResult
+	searchOrdersByProductName(
+		searchKeyword: String
+		pageSize: Int
+		pageIndex: Int
+	): SearchOrderResult
 }

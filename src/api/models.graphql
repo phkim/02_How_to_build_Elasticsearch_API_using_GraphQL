@@ -14,22 +14,12 @@ type Customer {
 
 type Order {
 	id: Int
-	customerId: Int
-	productId: Int
 	currency: String
 	taxfulTotalPrice: Float
 	dayOfWeek: String
 	orderDate: String
-}
-
-type OrderCountByDayOfWeek {
-	Sunday: Int
-	Monday: Int
-	Tuesday: Int
-	Wednesday: Int
-	Thursday: Int
-	Friday: Int
-	Saturday: Int
+	customer: Customer
+	products: [Product]
 }
 
 type SearchOrderResult {

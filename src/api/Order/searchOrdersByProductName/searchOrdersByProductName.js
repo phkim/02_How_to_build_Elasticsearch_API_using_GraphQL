@@ -4,13 +4,10 @@ export default {
   Query: {
     searchOrdersByProductName: async (_, args) => {
       let client = null;
-      let { searchKeyword } = args;
-      let searchResult = null;
+      let { searchKeyword, pageSize, pageIndex } = args;
       let searchOrderResult = {};
 
       try {
-        searchOrderResult = {};
-
         client = new Client({
           node: { url: new URL(process.env.ES_ENDPOINT) },
           auth: {
@@ -19,25 +16,33 @@ export default {
           }
         });
 
-        searchResult = await client.search({
-          index: "product",
+        let searchResult = await client.search({
+          index: "order",
           body: {
-            "size": 10000,
+            "from": (pageIndex * pageSize),
+            "size": pageSize,
             "query": {
               "match": {
                 "productName": searchKeyword
               }
-            }
+            },
+            "sort": [
+              { "id": { "order": "desc", "mode": "max" } }
+            ]
           }
         })
 
-        searchOrderResult.products = new Array();
+        let orders = new Array();
 
-        for (let hit of searchResult.body.hits.hits) {
-          searchOrderResult.orders.push(hit._source);
+        if (searchResult != null && searchResult.body != null && searchResult.body.hits != null && searchResult.body.hits.hits != null) {
+          for (let hit of searchResult.body.hits.hits) {
+            orders.push(hit._source);
+          }
+          searchOrderResult.total = searchResult.body.hits.total.value;
         }
+        searchOrderResult.orders = orders;
       } catch (e) {
-        console.log("searchOrders exception: " + e);
+        console.log("searchOrdersByProductName exception: " + e);
       }
 
       return searchOrderResult;
